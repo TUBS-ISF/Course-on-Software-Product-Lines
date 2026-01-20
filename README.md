@@ -3,7 +3,7 @@
 **[Open educational resources](https://en.wikipedia.org/wiki/Open_educational_resources) on software product lines**
 
 * **LaTeX Slides**: Material for lectures on software product lines 
-* [LaTeX Exercises](https://github.com/TUBS-ISF/Course-on-Software-Product-Lines-Exercises): Material for exercises on software product lines (available on request)
+* [LaTeX Exercises](https://github.com/TUBS-ISF/Course-on-Software-Product-Lines-Exercises): Material for exercises on software product lines
 * [PDF Slides](https://github.com/TUBS-ISF/Course-on-Software-Product-Lines-Slides): Released version of slides for the lecture on software product lines
 * [Recordings](https://www.youtube.com/playlist?list=PL4hJhdKDPIxha8So7muX2zfNUU8NBoiu3): YouTube playlist with lecture recordings
 * VaMoS'25 Paper: [PDF](https://raw.githubusercontent.com/SoftVarE-Group/Papers/main/2025/2025-VaMoS-Kuiter.pdf) | [DOI](https://doi.org/10.1145/3715340.3715441) | [Slides](https://raw.githubusercontent.com/SoftVarE-Group/Slides/main/2025/2025-02-04-VaMoS-SPL-Course.pdf) | [Artifact](https://doi.org/10.5281/zenodo.14417094) | [Best Paper Award](https://raw.githubusercontent.com/SoftVarE-Group/Papers/main/2025/2025-VaMoS-Kuiter-BestPaperCertificate.pdf)
