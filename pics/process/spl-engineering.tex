@@ -48,10 +48,19 @@
   \node[splebox] (dd) at ( 5,5) {\spleboxcontent{Domain\\ Design}};
   \node[splebox] (di) at (10,5) {\spleboxcontent{Domain\\ Implementation}};
   \node[splebox] (dt) at (15,5) {\spleboxcontent{Domain\\ Testing}};
-
+  
   %%% outer box
   \node[deaebox, fit=(da)(dd)(di)(dt)] (de) {};
   \node[anchor=north west] (delabel) at (de.north west) {\deaeText{Domain Engineering}};
+  
+  \path[->, draw, bigtip]
+  (da) edge[deaeEdge] node[label, above] {Feature Model} (dd)
+  (dd) edge[deaeEdge] node[label, above] {} (di)
+  (di) edge[deaeEdge] node[label, above] {} (dt)
+  ;
+  
+  
+  \pause
 
   %%% === APPLICATION ENGINEERING ===
   %%% inner boxes
@@ -63,6 +72,30 @@
   %%% outer box
   \node[deaebox, fit=(aa)(aa)(ai)(at)] (ae) {};
   \node[anchor=north west] (aelabel) at (ae.north west) {\deaeText{Application Engineering}};
+  
+  \path[->, draw, bigtip]  
+  (aa) edge[deaeEdge] node[label, above] {Configuration} (ad)
+  (ad) edge[deaeEdge] node[label, above] {} (ai)
+  (ai) edge[deaeEdge] node[label, above] {} (at)
+  
+  (da) edge[deaeEdge] node[label, left] {} (aa)
+  (dd) edge[deaeEdge] node[label, left] {} (ad)
+  (di) edge[deaeEdge] node[label, left] {} (ai)
+  (dt) edge[deaeEdge] node[label, left] {} (at)
+  
+  (aa) edge[deaeEdge, bend left=40] node[label, left] {} (da)
+  ;
+  
+  
+  %% Edge from AE to DE
+  \draw[->, deaeEdge, bigtip]
+  ($(ae.north east) + (-0.5, 0)$) -- node[midway, label, right]
+  {%label goes here
+  }
+  ($(de.south east) + (-0.5, 0)$)
+  ;
+  
+  \pause
 
   %%% === REQUIREMENTS ===
   \node[left=of de, splebox] (plr) {\spleboxcontent{Product-Line\\ Requirements}};
@@ -74,30 +107,8 @@
     \path[->, draw, bigtip]
       (plr) edge[deaeEdge] node[label, above] {} (de)
       (pr)  edge[deaeEdge] node[label, above] {} (ae)
-
-      (da) edge[deaeEdge] node[label, above] {Feature Model} (dd)
-      (dd) edge[deaeEdge] node[label, above] {} (di)
-      (di) edge[deaeEdge] node[label, above] {} (dt)
-
-      (aa) edge[deaeEdge] node[label, above] {Configuration} (ad)
-      (ad) edge[deaeEdge] node[label, above] {} (ai)
-      (ai) edge[deaeEdge] node[label, above] {} (at)
-
-      (da) edge[deaeEdge] node[label, left] {} (aa)
-      (dd) edge[deaeEdge] node[label, left] {} (ad)
-      (di) edge[deaeEdge] node[label, left] {} (ai)
-      (dt) edge[deaeEdge] node[label, left] {} (at)
-
-      (aa) edge[deaeEdge, bend left=40] node[label, left] {} (da)
     ;
 
-    %% Edge from AE to DE
-    \draw[->, deaeEdge, bigtip]
-      ($(ae.north east) + (-0.5, 0)$) -- node[midway, label, right]
-      {%label goes here
-      }
-      ($(de.south east) + (-0.5, 0)$)
-    ;
 
     %% Edge to Product / Variant
     \draw[->, deaeEdge, bigtip]
@@ -106,7 +117,9 @@
       }
       (product)
     ;
+    \pause
 
+	\only<4->{
   %%% The little "custom" boxes
   \ifSpleHighlightCustomDevelopment%
   \begin{scope}[on background layer]
@@ -121,14 +134,15 @@
         ;
     }
   \end{scope}
-  \fi
+  \fi}
 
+  \only<5->{
   \ifSpleHighlightProblemAndSolutionSpace{
     \node[yshift=+3cm] (spacesTop) at ($(da)!0.5!(dd)$) {};
     \node[yshift=-3cm] (spacesBot) at ($(aa)!0.5!(ad)$) {};
     \node[left  = of spacesTop, anchor = north east] {problem space};
     \node[right = of spacesTop, anchor = north west] {solution space};
     \draw (spacesTop) -- (spacesBot);
-  }\fi
+  }\fi}
 \end{tikzpicture}
 }
