@@ -64,13 +64,13 @@
 	\renewcommand{\arraystretch}{1.2}
 	\newcommand{\myexception}[1]{\tiny{}(#1)}
 	\begin{tabular}{p{32mm}p{32mm}p{14mm}p{27mm}p{14mm}}
-		 & Compile-Time Variability & Features & Product Generation & Feature \mbox{Traceability} \pause\\\rowcolor{gray}
+		 & Compile-Time Variability & Features & Product Generation & Feature \mbox{Traceability} \pause\\\rowcolor{gray!50}
 		Runtime Variability & no \myexception{very limited for immutable global variables} & only fine grained & yes \mbox{\myexception{except for preference dialogs}} & no \pause\\
-		Clone-and-Own & yes \linebreak\myexception{only for implemented products} & no & no \myexception{limited generation for clone-and-own with build systems} & no \pause\\\rowcolor{gray}
+		Clone-and-Own & yes \linebreak\myexception{only for implemented products} & no & no \myexception{limited generation for clone-and-own with build systems} & no \pause\\\rowcolor{gray!50}
 		\mbox{Build Systems} \mbox{\myexception{for Conditional Compilation}} & yes & only coarse grained & yes & with tool support \pause\\
-		Preprocessors \mbox{\myexception{for Conditional Compilation}} & yes & only fine grained & yes & with tool support \pause\\\rowcolor{gray}
+		Preprocessors \mbox{\myexception{for Conditional Compilation}} & yes & only fine grained & yes & with tool support \pause\\\rowcolor{gray!50}
 		Components/Services & yes & only coarse grained & no \linebreak\myexception{except pure exchange} & only coarse grained \pause\\
-		Frameworks with Plug-Ins & yes & only coarse grained & yes & only coarse grained \pause\\\rowcolor{gray}
+		Frameworks with Plug-Ins & yes & only coarse grained & yes & only coarse grained \pause\\\rowcolor{gray!50}
 		Feature Modules/Aspects & yes & yes & yes & yes \pause\\
 	\end{tabular}
 	\begin{note}{Further Criteria}
