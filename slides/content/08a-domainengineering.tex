@@ -64,7 +64,8 @@
 \end{frame}
 
 % terms used in the remainder are mostly taken from \sple and some from \fospl
-\begin{frame}[label=DomainAndApplicationEngineeringDiagram]
+\begin{frame}[t,label=DomainAndApplicationEngineeringDiagram]{Domain and Application Engineering}
+	\vspace{-16pt}
 	\input{../pics/process/spl-engineering}
 \end{frame}
 
@@ -75,11 +76,11 @@
 	\nextcolumn
 		\begin{definition}{Domain Analysis\mysource{\fospl\mypage{21}, \sple\mypage{25}}}
 			\begin{itemize}
-				\item requirements analysis for a product line
-				\item define scope of the product line
-				\item which features are in scope?
-				\item which combinations of features are in scope?
-				\item typically results in a feature model and features mapped to requirements
+				\item \textbf{requirements} analysis for a product line
+				\item define \textbf{scope} of the product line
+				\item which \textbf{features} are in scope?
+				\item which \textbf{combinations of features} are in scope?
+				\item[$\Rightarrow$] typically results in a \textbf{feature model} and features mapped to requirements
 			\end{itemize}
 		\end{definition}
 		\begin{definition}{Domain Scoping\mysource{\fospl\mypage{22}}}
@@ -114,13 +115,14 @@
 	\begin{fancycolumns}[widths={70},animation=none]
 		\centering\pic[width=\linewidth]{toyota-aygo-mirrorcovers}
 	\nextcolumn
+		\pause
 		\begin{example}{Aygo Mirror Covers}
 			Can customers choose \ldots
 			\begin{itemize}
-				\item mirror covers? Yes!
-				\item different covers for left and right side? Yes!
-				\item multiple covers for the same side? Yes!
-				\item between 2, 3, 4, \ldots\ colors and which ones?
+				\item<2-> mirror covers? Yes!
+				\item<3-> different covers for left and right side? Yes!
+				\item<4-> multiple covers for the same side? Yes!
+				\item<5-> between 2, 3, 4, \ldots\ colors and which ones?
 			\end{itemize}
 		\end{example}
 	\end{fancycolumns}
@@ -146,9 +148,9 @@
 	\nextcolumn
 		\begin{definition}{Domain Design\mysource{\sple\mypage{26}}} % TODO see \sple Chapter 6+11
 			\begin{itemize}
-				\item development of a reference architecture (e.g., client-server or pipe-and-filter)
+				\item development of a \textbf{reference architecture} (e.g., client-server or pipe-and-filter)
 				\item common, high-level structure for all products
-				\item decision on implementation technique
+				\item decision on \textbf{implementation technique}
 					\begin{itemize}
 						\item runtime variability: (immutable) global variables, method parameters
 						\item clone-and-own: ad-hoc, with version control, with build systems
@@ -178,7 +180,7 @@
 	\nextcolumn
 		\begin{definition}{Domain Implementation\mysource{\fospl\mypage{21}}} % TODO see \sple Chapter 7+12
 			\begin{itemize}
-				\item development of reusable artifacts
+				\item development of \textbf{reusable artifacts}
 				\item implementation of features identified during domain analysis
 				\item implementation largely depends on the implementation technique chosen in domain design
 			\end{itemize}

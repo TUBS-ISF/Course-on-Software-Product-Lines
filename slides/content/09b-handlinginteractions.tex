@@ -32,53 +32,110 @@
 	\end{fancycolumns}
 \end{frame}
 
+%\begin{frame}[fragile]{Running Example: A Feature Interaction in our Graph Library}
+%	\begin{fancycolumns}[animation=none]
+%		\centering
+%		\featureDiagram{
+%			Graph,concrete
+%			[Nodes,mandatory,abstract
+%				[Colored,optional,concrete]]
+%			[Edges,mandatory,abstract
+%				[Directed,optional,concrete]
+%				[Weighted,optional,concrete]]
+%			[Algorithms,mandatory,abstract,
+%				[ShortestPath,optional,concrete]]
+%		}
+%
+%		~
+%		\only<1|handout:0>{\begin{note}{}
+%			What is the problem?
+%		\end{note}}
+%		\only<2->{\begin{note}{Optional-Feature Problem}
+%			\begin{itemize}
+%				\item Domain view: $Weighted$ and $ShortestPath$ can be deliberately selected independent of each other.
+%				\item Implementation view: $ShortestPath$ requires $Weighted$ due to an implementation dependency.
+%			\end{itemize}
+%		\end{note}}
+%	\nextcolumn
+%\begin{codetight}{Feature Module BasicGraph}
+%class Edge {
+%	Node a, b; ...
+%}
+%\end{codetight}	
+%\begin{codetight}{Feature Module Weighted}
+%refines class Edge {
+%	double weight; ...
+%}
+%\end{codetight}	
+%\begin{codetight}{Feature Module ShortestPath}
+%refines class Graph {
+%	List shortestPath(Node a, Node b){
+%		Edge e1, e2;
+%		...
+%		if (e1.weight > e2.weight) 
+%		... 
+%	}
+%}
+%\end{codetight}	
+%	\end{fancycolumns}
+%\end{frame}
+
 \begin{frame}[fragile]{Running Example: A Feature Interaction in our Graph Library}
 	\begin{fancycolumns}[animation=none]
 		\centering
 		\featureDiagram{
 			Graph,concrete
 			[Nodes,mandatory,abstract
-				[Colored,optional,concrete]]
+			[Colored,optional,concrete]]
 			[Edges,mandatory,abstract
-				[Directed,optional,concrete]
-				[Weighted,optional,concrete]]
+			[Directed,optional,concrete]
+			[Weighted,optional,concrete]]
 			[Algorithms,mandatory,abstract,
-				[ShortestPath,optional,concrete]]
+			[ShortestPath,optional,concrete]]
 		}
-
+		
 		~
 		\only<1|handout:0>{\begin{note}{}
-			What is the problem?
+				What is the problem?
 		\end{note}}
 		\only<2->{\begin{note}{Optional-Feature Problem}
-			\begin{itemize}
-				\item Domain view: $Weighted$ and $ShortestPath$ can be deliberately selected independent of each other.
-				\item Implementation view: $ShortestPath$ requires $Weighted$ due to an implementation dependency.
-			\end{itemize}
+				\begin{itemize}
+					\item Domain view: $Weighted$ and $ShortestPath$ can be deliberately selected independent of each other.
+					\item Implementation view: $ShortestPath$ requires $Weighted$ due to an implementation dependency.
+				\end{itemize}
 		\end{note}}
-	\nextcolumn
+		\nextcolumn
 \begin{codetight}{Feature Module BasicGraph}
-class Edge {
-	Node a, b; ...
-}
+	class Edge { Node a, b; ... }
 \end{codetight}	
 \begin{codetight}{Feature Module Weighted}
-refines class Edge {
-	double weight; ...
-}
+	refines class Edge { double weight; ... }
 \end{codetight}	
 \begin{codetight}{Feature Module ShortestPath}
-refines class Graph {
-	List shortestPath(Node a, Node b){
-		Edge e1, e2;
-		...
-		if (e1.weight > e2.weight) 
-		... 
+	refines class Graph {
+		List<Edge> shortestPath(Node a, Node b){
+			List<Edge> currentPath;
+			... 
+			double currentLength = length(currentPath);
+			... 
+		}
+		double length(List<Edge> path) {
+			return path.stream()
+					.mapToDouble(e -> e.weight).sum();
+		}
 	}
-}
 \end{codetight}	
 	\end{fancycolumns}
 \end{frame}
+
+\begin{frame}{Handling Feature Interactions: General Goals}
+	\centering
+	\pic[width=.58\linewidth]{interaction-handling-2_}
+	\vskip15pt
+	
+	\pic[width=\linewidth]{interaction-handling-1_}
+\end{frame}
+
 % TODO refines keyword not highlighted
 
 \begin{frame}{Handling Feature Interactions: General Goals}
@@ -106,12 +163,199 @@ refines class Graph {
 	\end{fancycolumns}
 \end{frame}
 
+
 \subsection{Strategy S1: Adapt Feature Model}
 
-\subsubsection*{(a) Add Domain Dependency}
+\begin{frame}[fragile]{\myframetitle{}}
+	\begin{fancycolumns}[animation=none]
+		\centering
+		\featureDiagram{
+			Graph,concrete
+			[Nodes,mandatory,abstract
+			[Colored,optional,concrete]]
+			[Edges,mandatory,abstract
+			[Directed,optional,concrete]
+			[Weighted,optional,concrete]]
+			[Algorithms,mandatory,abstract,
+			[ShortestPath,optional,concrete]]
+		}
+		
+		\textcolor{lecturegreen}{$ShortestPath \pimplies Weighted$}
+		
+		~
+		\begin{note}{}
+			Same implementation as before, but we make implementation dependency explicit:\\
+			$ShortestPath$ requires $Weighted$.
+		\end{note}
+		\begin{note}{}
+			Effectively forbids faulty interaction\\
+			$\neg Weighted \wedge ShortestPath$
+		\end{note}
+		\nextcolumn
+\begin{codetight}{Feature Module BasicGraph}
+	class Edge { Node a, b; ... }
+\end{codetight}	
+\begin{codetight}{Feature Module Weighted}
+	refines class Edge { double weight; ... }
+\end{codetight}	
+\begin{codetight}{Feature Module ShortestPath}
+	refines class Graph {
+		List<Edge> shortestPath(Node a, Node b){
+			List<Edge> currentPath;
+			... 
+			double currentLength = length(currentPath);
+			... 
+		}
+		double length(List<Edge> path) {
+			return path.stream()
+			.mapToDouble(e -> e.weight).sum();
+		}
+	}
+\end{codetight}	
+	\end{fancycolumns}
+\end{frame}
+
+\begin{frame}[fragile]{\myframetitle{} II}
+	\begin{fancycolumns}[animation=none]
+		\centering
+		\featureDiagram{
+			Graph,concrete
+			[Nodes,mandatory,abstract
+			[Colored,optional,concrete]]
+			[Edges,mandatory,abstract
+			[Directed,optional,concrete]
+			[Weighted,optional,concrete]]
+			[Algorithms,mandatory,abstract,
+			[ShortestPath,optional,concrete]]
+		}
+		
+		\textcolor{lecturegreen}{$\neg ShortestPath$}
+		
+		~
+		\begin{note}{}
+			Same implementation as before, but forbids using $ShortestPath$ in any configuration.
+		\end{note}
+		\nextcolumn
+\begin{codetight}{Feature Module BasicGraph}
+	class Edge { Node a, b; ... }
+\end{codetight}	
+\begin{codetight}{Feature Module Weighted}
+	refines class Edge { double weight; ... }
+\end{codetight}	
+\begin{codetight}{Feature Module ShortestPath}
+	refines class Graph {
+		List<Edge> shortestPath(Node a, Node b){
+			List<Edge> currentPath;
+			... 
+			double currentLength = length(currentPath);
+			... 
+		}
+		double length(List<Edge> path) {
+			return path.stream()
+			.mapToDouble(e -> e.weight).sum();
+		}
+	}
+\end{codetight}	
+	\end{fancycolumns}
+\end{frame}
+
+\begin{frame}[fragile]{\myframetitle{} III}
+	\begin{fancycolumns}[animation=none]
+		\centering
+		\featureDiagram{
+			Graph,concrete
+			[Nodes,mandatory,abstract
+			[Colored,optional,concrete]]
+			[Edges,mandatory,abstract
+			[Directed,optional,concrete]
+			[Weighted,optional,concrete]]
+			[Algorithms,mandatory,abstract,
+			[ShortestPath,optional,concrete]]
+		}
+		
+		\textcolor{lecturegreen}{$Weighted$}
+		
+		~
+		\begin{note}{}
+			Same implementation as before, but requires $Weighted$ in every configuration\\
+			(i.e. makes $Weighted$ \textit{core}).
+		\end{note}
+		\nextcolumn
+\begin{codetight}{Feature Module BasicGraph}
+	class Edge { Node a, b; ... }
+\end{codetight}	
+\begin{codetight}{Feature Module Weighted}
+	refines class Edge { double weight; ... }
+\end{codetight}	
+\begin{codetight}{Feature Module ShortestPath}
+	refines class Graph {
+		List<Edge> shortestPath(Node a, Node b){
+			List<Edge> currentPath;
+			... 
+			double currentLength = length(currentPath);
+			... 
+		}
+		double length(List<Edge> path) {
+			return path.stream()
+			.mapToDouble(e -> e.weight).sum();
+		}
+	}
+\end{codetight}	
+	\end{fancycolumns}
+\end{frame}
+
+%\begin{frame}[fragile]{\myframetitle}
+%	\begin{fancycolumns}[animation=none]
+%		\centering
+%		\featureDiagram{
+%			Graph,concrete
+%			[Nodes,mandatory,abstract
+%			[Colored,optional,concrete]]
+%			[Edges,mandatory,abstract
+%			[Directed,optional,concrete]
+%			[Weighted,optional,concrete]]
+%			[Algorithms,mandatory,abstract,
+%			[ShortestPath,optional,concrete]]
+%		}
+%		
+%		\textcolor{lecturegreen}{$ShortestPath \pimplies Weighted$}
+%		
+%		~
+%		\begin{note}{}
+%			Same implementation as before, but we make implementation dependency explicit: $ShortestPath$ requires $Weighted$.
+%		\end{note}
+%		\begin{note}{}
+%			Effectively forbids faulty interaction\\
+%			$\neg Weighted \wedge ShortestPath$
+%		\end{note}
+%		\nextcolumn
+%		\begin{codetight}{Feature Module BasicGraph}
+%			class Edge {
+%				Node a, b; ...
+%			}
+%		\end{codetight}	
+%		\begin{codetight}{Feature Module Weighted}
+%			refines class Edge {
+%				double weight; ...
+%			}
+%		\end{codetight}	
+%		\begin{codetight}{Feature Module ShortestPath}
+%			refines class Graph {
+%				List<Node> shortestPath(Node a, Node b){
+%					Edge e1, e2;
+%					...
+%					if (e1.weight > e2.weight)
+%					... 
+%				}
+%			}
+%		\end{codetight}	
+%	\end{fancycolumns}
+%\end{frame}
+
+\subsubsection*{Add Domain Dependency}
 \begin{frame}{\myframetitle}
 	\begin{fancycolumns}[widths={30},animation=none]
-		\begin{definition}{Strategy S1a}
+		\begin{definition}{Strategy S1}
 			Declare implementation dependency as domain dependency in the feature model.
 		\end{definition}
 	\nextcolumn
@@ -119,118 +363,66 @@ refines class Graph {
 	\end{fancycolumns}
 \end{frame}
 
-\begin{frame}[fragile]{\myframetitle}
-	\begin{fancycolumns}[animation=none]
-		\centering
-		\featureDiagram{
-			Graph,concrete
-			[Nodes,mandatory,abstract
-				[Colored,optional,concrete]]
-			[Edges,mandatory,abstract
-				[Directed,optional,concrete]
-				[Weighted,optional,concrete]]
-			[Algorithms,mandatory,abstract,
-				[ShortestPath,optional,concrete]]
-		}
 
-		$ShortestPath \pimplies Weighted$
 
-		~
-		\begin{note}{}
-			Same implementation as before, but we make implementation dependency explicit: $ShortestPath$ requires $Weighted$.
-		\end{note}
-	\nextcolumn
-\begin{codetight}{Feature Module BasicGraph}
-class Edge {
-	Node a, b; ...
-}
-\end{codetight}	
-\begin{codetight}{Feature Module Weighted}
-refines class Edge {
-	double weight; ...
-}
-\end{codetight}	
-\begin{codetight}{Feature Module ShortestPath}
-refines class Graph {
-	List<Node> shortestPath(Node a, Node b){
-		Edge e1, e2;
-		...
-		if (e1.weight > e2.weight)
-		... 
-	}
-}
-\end{codetight}	
-	\end{fancycolumns}
-\end{frame}
+%\subsubsection*{(b) Exclude Feature Combination}
+%\begin{frame}{\myframetitle}
+%	\begin{fancycolumns}[widths={30},animation=none]
+%		\begin{definition}{Strategy S1b}
+%			Declare problematic feature combinations as mutually exclusive in the feature model.
+%		\end{definition}
+%	\nextcolumn
+%		\pic[width=\linewidth,page=2]{interaction-handling}
+%	\end{fancycolumns}
+%\end{frame}
 
-\subsubsection*{(b) Exclude Feature Combination}
-\begin{frame}{\myframetitle}
-	\begin{fancycolumns}[widths={30},animation=none]
-		\begin{definition}{Strategy S1b}
-			Declare problematic feature combinations as mutually exclusive in the feature model.
-		\end{definition}
-	\nextcolumn
-		\pic[width=\linewidth,page=2]{interaction-handling}
-	\end{fancycolumns}
-\end{frame}
-
-\begin{frame}[fragile]{\myframetitle}
-	\begin{fancycolumns}[animation=none]
-		\centering
-		\featureDiagram{
-			Graph,concrete
-			[Nodes,mandatory,abstract
-				[Colored,optional,concrete]]
-			[Edges,mandatory,abstract
-				[Directed,optional,concrete]
-				[Weighted,optional,concrete]]
-			[Algorithms,mandatory,abstract,
-				[ShortestPath,optional,concrete]]
-		}
-
-		$\pnot (ShortestPath \pand Weighted)$  
-
-		~
-		\begin{note}{}
-			We may safely assume any uniform weight because $ShortestPath$ and $Weighted$ are mutually exclusive.
-		\end{note}
-	\nextcolumn
-\begin{codetight}{Feature Module BasicGraph}
-class Edge {
-	Node a, b; ...
-}
-\end{codetight}	
-\begin{codetight}{Feature Module Weighted}
-refines class Edge {
-	double weight; ...
-}
-\end{codetight}	
-\begin{codetight}{Feature Module ShortestPath}
-refines class Graph {
-	List shortestPath(Node a, Node b){
-		@double w1 = 1.0;@
-		@double w2 = 1.0;@
-		...
-		@if (w1 > w2)@
-		... 
-	}
-}
-\end{codetight}	
-	\end{fancycolumns}
-\end{frame}
+%\begin{frame}[fragile]{\myframetitle}
+%	\begin{fancycolumns}[animation=none]
+%		\centering
+%		\featureDiagram{
+%			Graph,concrete
+%			[Nodes,mandatory,abstract
+%				[Colored,optional,concrete]]
+%			[Edges,mandatory,abstract
+%				[Directed,optional,concrete]
+%				[Weighted,optional,concrete]]
+%			[Algorithms,mandatory,abstract,
+%				[ShortestPath,optional,concrete]]
+%		}
+%
+%		$\pnot (ShortestPath \pand Weighted)$  
+%
+%		~
+%		\begin{note}{}
+%			We may safely assume any uniform weight because $ShortestPath$ and $Weighted$ are mutually exclusive.
+%		\end{note}
+%	\nextcolumn
+%\begin{codetight}{Feature Module BasicGraph}
+%class Edge {
+%	Node a, b; ...
+%}
+%\end{codetight}	
+%\begin{codetight}{Feature Module Weighted}
+%refines class Edge {
+%	double weight; ...
+%}
+%\end{codetight}	
+%\begin{codetight}{Feature Module ShortestPath}
+%refines class Graph {
+%	List shortestPath(Node a, Node b){
+%		@double w1 = 1.0;@
+%		@double w2 = 1.0;@
+%		...
+%		@if (w1 > w2)@
+%		... 
+%	}
+%}
+%\end{codetight}	
+%	\end{fancycolumns}
+%\end{frame}
 
 \subsection{Strategy S2: Orthogonal Implementation}
 
-\begin{frame}{\myframetitle}
-	\begin{fancycolumns}[widths={30},animation=none]
-		\begin{definition}{Strategy S2}
-			Orthogonal implementation with no dedicated coordination of interaction.
-		\end{definition}
-	\nextcolumn
-		\pic[width=\linewidth,page=3]{interaction-handling}
-	\end{fancycolumns}
-\end{frame}
-
 \begin{frame}[fragile]{\myframetitle}
 	\begin{fancycolumns}[animation=none]
 		\centering
@@ -244,8 +436,6 @@ refines class Graph {
 			[Algorithms,mandatory,abstract,
 				[ShortestPath,optional,concrete]]
 		}
-
-		$\pnot (ShortestPath \pand Weighted)$  
 
 		~
 		\begin{note}{}
@@ -253,37 +443,40 @@ refines class Graph {
 		\end{note}
 	\nextcolumn
 \begin{codetight}{Feature Module BasicGraph}
-class Edge {
-	Node a, b; ...
-}
+	class Edge { Node a, b; ... }
 \end{codetight}	
 \begin{codetight}{Feature Module Weighted}
-refines class Edge {
-	double weight; ...
-}
+	refines class Edge { double weight; ... }
 \end{codetight}	
 \begin{codetight}{Feature Module ShortestPath}
-refines class Graph {
-	List shortestPath(Node a, Node b){
-		// ignore weights
-		... 
+	refines class Graph {
+		List<Edge> shortestPath(Node a, Node b){
+			List<Edge> currentPath;
+			... 
+			double currentLength = length(currentPath);
+			... 
+		}
+		double length(List<Edge> path) {
+			@return path.size();@
+		}
 	}
-}
 \end{codetight}	
+	\end{fancycolumns}
+\end{frame}
+
+\begin{frame}{\myframetitle}
+	\begin{fancycolumns}[widths={30},animation=none]
+		\begin{definition}{Strategy S2}
+			Orthogonal implementation with no dedicated coordination of interaction.
+		\end{definition}
+		\nextcolumn
+		\pic[width=\linewidth,page=3]{interaction-handling}
 	\end{fancycolumns}
 \end{frame}
 
 \subsection{Strategy S3: Duplicate Implementations}
 
-\begin{frame}{\myframetitle}
-	\begin{fancycolumns}[widths={30},animation=none]
-		\begin{definition}{Strategy S3}
-			Multiple implementations of a feature, with and without coordination code.
-		\end{definition}
-	\nextcolumn
-		\pic[width=\linewidth,page=4]{interaction-handling}
-	\end{fancycolumns}
-\end{frame}
+
 
 \begin{frame}[fragile]{\myframetitle}
 	\begin{fancycolumns}[widths={55},animation=none]
@@ -310,168 +503,326 @@ refines class Graph {
 			One of two different implementations chosen based on selection of interacting features.
 		\end{note}
 	\nextcolumn
-\begin{codetight}{Feature Module UnweightedShortestPath}
-refines class Graph {
-	List shortestPath(Node a, Node b){
-		...
-		...
-		// ignore weights
-		... 
+\vspace{-10pt}
+\begin{codetight}{Feature Module \emph{UnweightedShortestPath}}
+	refines class Graph {
+		List<Edge> shortestPath(Node a, Node b){
+			List<Edge> currentPath;	...
+			double length = length(currentPath);	... 
+		}
+		double length(List<Edge> path) {
+			@return path.size();@
+		}
 	}
-}
-\end{codetight}
-\begin{codetight}{Feature Module WeightedShortestPath}
-refines class Graph {
-	List shortestPath(Node a, Node b){
-		Edge e1, e2;
-		...
-		if (e1.weight > e2.weight) 
-		... 
-	}
-}
 \end{codetight}	
+\begin{codetight}{Feature Module \emph{WeightedShortestPath}}
+	refines class Graph {
+		List<Edge> shortestPath(Node a, Node b){
+			List<Edge> currentPath;	... 
+			double length = length(currentPath);	... 
+		}
+		double length(List<Edge> path) {
+			@return path.stream()
+					.mapToDouble(e -> e.weight).sum();@
+		}
+	}
+\end{codetight}	
+
+
 	\end{fancycolumns}
 \end{frame}
-
-\subsection{Strategy S4: Move Source Code}
 
 \begin{frame}{\myframetitle}
 	\begin{fancycolumns}[widths={30},animation=none]
-		\begin{definition}{Strategy S4}
-			Move all the coordination code to one of the features (or to a third one all interacting features depend on).
+		\begin{definition}{Strategy S3}
+			Multiple implementations of a feature, with and without coordination code.
 		\end{definition}
-	\nextcolumn
-		\pic[width=\linewidth,page=5]{interaction-handling}
+		\nextcolumn
+		\pic[width=\linewidth,page=4]{interaction-handling}
 	\end{fancycolumns}
 \end{frame}
 
-\begin{frame}[fragile]{\myframetitle}
-	\begin{fancycolumns}[animation=none]
-\begin{codetight}{Feature Module BasicGraph}
-class Edge {
-	Node a, b;
-	@double weight = 1.0;@
-	...
-}
-\end{codetight}	
-\begin{codetight}{Feature Module Weighted}
-refines class Edge {
-	...
-}
-\end{codetight}	
-	\nextcolumn
-\begin{codetight}{Feature Module ShortestPath}
-refines class Graph {
-	List shortestPath(Node a, Node b){
-		Edge e1, e2;
-		...
-		if (e1.weight > e2.weight) 
-		... 
-	}
-}
-\end{codetight}	
-	\end{fancycolumns}
-\end{frame}
 
-\subsection{Strategy S5: Conditional Compilation}
 
-\begin{frame}{\myframetitle}
-	\begin{fancycolumns}[widths={30},animation=none]
-		\begin{definition}{Strategy S5}
-			Coordination code is only executed if both features are selected.
-		\end{definition}
-	\nextcolumn
-		\pic[width=\linewidth,page=6]{interaction-handling}
-	\end{fancycolumns}
-\end{frame}
+\subsection{Strategy S4: Move Coordination Code}
 
-\begin{frame}[fragile]{\myframetitle}
-	\begin{fancycolumns}[animation=none]
-\begin{codetight}{Feature Module BasicGraph}
-class Edge {
-	Node a, b; ...
-}
-\end{codetight}	
-\begin{codetight}{Feature Module Weighted}
-refines class Edge {
-	double weight; ...
-}
-\end{codetight}	
-	\nextcolumn
-\begin{codetight}{Feature Module ShortestPath}
-refines class Graph {
-	List shortestPath(Node a, Node b){
-		Edge e1, e2;
-		...
-@#ifdef WEIGHTED@		
-		if (e1.weight > e2.weight) ...
-@#endif@
-		... 
-	}
-}
-\end{codetight}	
-	\end{fancycolumns}
-\end{frame}
-
-\subsection{Strategy S6: Derivative Modules}
-
-\begin{frame}{\myframetitle}
-	\begin{fancycolumns}[widths={30},animation=none]
-		\begin{definition}{Strategy S6}
-			Create a dedicated module for code that coordinates features.
-		\end{definition}
-	\nextcolumn
-		\pic[width=\linewidth,page=7]{interaction-handling}
-	\end{fancycolumns}
-\end{frame}
-
-\begin{frame}[fragile]{\myframetitle}
+\begin{frame}[fragile]{\myframetitle{}}
 	\begin{fancycolumns}[animation=none]
 		\centering
 		\featureDiagram{
 			Graph,concrete
 			[Nodes,mandatory,abstract
-				[Colored,optional,concrete]]
+			[Colored,optional,concrete]]
 			[Edges,mandatory,abstract
-				[Directed,optional,concrete]
-				[Weighted,optional,concrete]]
+			[Directed,optional,concrete]
+			[Weighted,optional,concrete]]
 			[Algorithms,mandatory,abstract,
-				[ShortestPath,optional,concrete,
-					[WeightedShortestPath,concrete,optional]]]
+			[ShortestPath,optional,concrete]]
 		}
-
-		$WeightedShortestPath \pequals ShortestPath \pand Weighted$
-
+		
 		~
 		\begin{note}{}
-			Derivative module is selected only if both interacting features are selected.
+			Move relevant code to one of the features (or to a third one all interacting features depend on).
 		\end{note}
-	\nextcolumn
-\begin{codetight}{Feature Module ShortestPath}
-refines class Graph {
-	List shortestPath(Node a, Node b){
-		Edge e1, e2;
-		...
-		if (isLonger(e1,e2)) 
-		... 
-	}
-	boolean isLonger(Edge e1, Edge e2){
-		return false;
-	}
-}
+		\nextcolumn
+\begin{codetight}{Feature Module BasicGraph}
+	class Edge { Node a, b; @double weight = 1.0;@ ... }
 \end{codetight}	
-\begin{codetight}{Feature Module WeightedShortestPath}
-refines class Graph {
-	boolean isLonger(Edge e1, Edge e2){
-		return e1.weight > e2.weight;
+\begin{codetight}{Feature Module Weighted}
+	refines class Edge { ... }
+\end{codetight}	
+\begin{codetight}{Feature Module ShortestPath}
+	refines class Graph {
+		List<Edge> shortestPath(Node a, Node b){
+			List<Edge> currentPath;
+			... 
+			double currentLength = length(currentPath);
+			... 
+		}
+		double length(List<Edge> path) {
+			return path.stream()
+			.mapToDouble(e -> e.weight).sum();
+		}
 	}
-}
 \end{codetight}	
 	\end{fancycolumns}
 \end{frame}
 
+%\begin{frame}[fragile]{\myframetitle}
+%	\begin{fancycolumns}[animation=none]
+%\begin{codetight}{Feature Module BasicGraph}
+%class Edge {
+%	Node a, b;
+%	@double weight = 1.0;@
+%	...
+%}
+%\end{codetight}	
+%\begin{codetight}{Feature Module Weighted}
+%refines class Edge {
+%	...
+%}
+%\end{codetight}	
+%	\nextcolumn
+%\begin{codetight}{Feature Module ShortestPath}
+%refines class Graph {
+%	List shortestPath(Node a, Node b){
+%		Edge e1, e2;
+%		...
+%		if (e1.weight > e2.weight) 
+%		... 
+%	}
+%}
+%\end{codetight}	
+%	\end{fancycolumns}
+%\end{frame}
+
+\begin{frame}{\myframetitle}
+	\begin{fancycolumns}[widths={30},animation=none]
+		\begin{definition}{Strategy S4}
+			Move relevant code to one of the features (or to a third one all interacting features depend on).
+		\end{definition}
+		\nextcolumn
+		\pic[width=\linewidth,page=5]{interaction-handling}
+	\end{fancycolumns}
+\end{frame}
+
+
+\subsection{Strategy S5: Conditional Coordination Code}
+
+
+\subsubsection*{Derivative Modules}
+
+\begin{frame}[fragile]{\myframetitle{}}
+	\begin{fancycolumns}[animation=none]
+		\centering
+		\featureDiagram{
+			Graph,concrete
+			[Nodes,mandatory,abstract
+			[Colored,optional,concrete]]
+			[Edges,mandatory,abstract
+			[Directed,optional,concrete]
+			[Weighted,optional,concrete]]
+			[Algorithms,mandatory,abstract,
+			[ShortestPath,optional,concrete,
+				[WeightedShortestPath,concrete,optional]]]
+	}
+
+	$WeightedShortestPath \pequals ShortestPath \pand Weighted$
+		
+		~
+		\begin{note}{}
+			Coordination code is only executed if both features are selected.
+		\end{note}
+		\nextcolumn
+\begin{codetight}{Feature Module ShortestPath}
+	refines class Graph {
+		List<Edge> shortestPath(Node a, Node b){
+			List<Edge> currentPath;
+			... 
+			double currentLength = length(currentPath);
+			... 
+		}
+		double length(List<Edge> path) {
+			return path.size();
+		}
+	}
+\end{codetight}	
+\begin{codetight}{Feature Module \emph{WeightedShortestPath}}
+	refines class Graph {
+		double length(List<Edge> path){
+			return path.stream()
+			.mapToDouble(e -> e.weight).sum();
+		}
+	}
+\end{codetight}	
+	\end{fancycolumns}
+\end{frame}
+
+\begin{frame}{\myframetitle}
+	\begin{fancycolumns}[widths={30},animation=none]
+		\begin{definition}{Strategy S5a}
+			Create a dedicated module for code that coordinates features.
+		\end{definition}
+		\nextcolumn
+		\pic[width=\linewidth,page=7]{interaction-handling}
+	\end{fancycolumns}
+\end{frame}
+
+\subsubsection*{Conditional Compilation}
+
+\begin{frame}[fragile]{\myframetitle{}}
+	\begin{fancycolumns}[animation=none]
+		\centering
+		\featureDiagram{
+			Graph,concrete
+			[Nodes,mandatory,abstract
+			[Colored,optional,concrete]]
+			[Edges,mandatory,abstract
+			[Directed,optional,concrete]
+			[Weighted,optional,concrete]]
+			[Algorithms,mandatory,abstract,
+			[ShortestPath,optional,concrete]]
+		}
+		
+		~
+		\begin{note}{}
+			Coordination code is only executed if both features are selected.
+		\end{note}
+		\nextcolumn
+		\begin{codetight}{Feature Module ShortestPath}
+			refines class Graph {
+				List<Edge> shortestPath(Node a, Node b){
+					List<Edge> currentPath;
+					... 
+					double currentLength = length(currentPath);
+					... 
+				}
+				double length(List<Edge> path) {
+					@#ifdef Weighted@
+					return path.stream()
+							.mapToDouble(e -> e.weight).sum();
+					@#else@
+					return path.size();
+					@#endif@
+				}
+			}
+		\end{codetight}
+	\end{fancycolumns}
+\end{frame}
+
+
+%\begin{frame}[fragile]{\myframetitle}
+%	\begin{fancycolumns}[animation=none]
+%\begin{codetight}{Feature Module BasicGraph}
+%class Edge {
+%	Node a, b; ...
+%}
+%\end{codetight}	
+%\begin{codetight}{Feature Module Weighted}
+%refines class Edge {
+%	double weight; ...
+%}
+%\end{codetight}	
+%	\nextcolumn
+%\begin{codetight}{Feature Module ShortestPath}
+%refines class Graph {
+%	List shortestPath(Node a, Node b){
+%		Edge e1, e2;
+%		...
+%@#ifdef WEIGHTED@		
+%		if (e1.weight > e2.weight) ...
+%@#endif@
+%		... 
+%	}
+%}
+%\end{codetight}
+%
+%	\end{fancycolumns}
+%\end{frame}
+
+\begin{frame}{\myframetitle}
+	\begin{fancycolumns}[widths={30},animation=none]
+		\begin{definition}{Strategy S5b}
+			Coordination code is only executed if both features are selected.
+		\end{definition}
+		\nextcolumn
+		\pic[width=\linewidth,page=6]{interaction-handling}
+	\end{fancycolumns}
+\end{frame}
+
+%\subsection{Strategy S6: Derivative Modules}
+%
+
+%
+%\begin{frame}[fragile]{\myframetitle}
+%	\begin{fancycolumns}[animation=none]
+%		\centering
+%		\featureDiagram{
+%			Graph,concrete
+%			[Nodes,mandatory,abstract
+%				[Colored,optional,concrete]]
+%			[Edges,mandatory,abstract
+%				[Directed,optional,concrete]
+%				[Weighted,optional,concrete]]
+%			[Algorithms,mandatory,abstract,
+%				[ShortestPath,optional,concrete,
+%					[WeightedShortestPath,concrete,optional]]]
+%		}
+%
+%		$WeightedShortestPath \pequals ShortestPath \pand Weighted$
+%
+%		~
+%		\begin{note}{}
+%			Derivative module is selected only if both interacting features are selected.
+%		\end{note}
+%	\nextcolumn
+%\begin{codetight}{Feature Module ShortestPath}
+%refines class Graph {
+%	List shortestPath(Node a, Node b){
+%		Edge e1, e2;
+%		...
+%		if (isLonger(e1,e2)) 
+%		... 
+%	}
+%	boolean isLonger(Edge e1, Edge e2){
+%		return false;
+%	}
+%}
+%\end{codetight}	
+%\begin{codetight}{Feature Module WeightedShortestPath}
+%refines class Graph {
+%	boolean isLonger(Edge e1, Edge e2){
+%		return e1.weight > e2.weight;
+%	}
+%}
+%\end{codetight}	
+%	\end{fancycolumns}
+%\end{frame}
+
 \subsection{Overview and Discussion}
 
 \begin{frame}[label=HandlingFeatureInteractions]{\myframetitle}
-	\centering\pic[width=0.9\linewidth,page=8,trim=40 25 40 25,clip]{interaction-handling} % TODO animated table in LaTeX
+	\centering
+%	\pic[width=0.9\linewidth,page=8,trim=40 25 40 25,clip]{interaction-handling} % TODO animated table in LaTeX
+	\pic[width=.9\linewidth]{interaction-handling-overview}
 \end{frame}

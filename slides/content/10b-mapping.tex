@@ -4,7 +4,7 @@
 \subsection{Automated Analysis of Feature Mappings}
 
 \begin{frame}{\myframetitle}
-	\begin{fancycolumns}[widths={45,55}]
+	\begin{fancycolumns}[widths={46,54}]
 		\begin{note}{Recap: A Typical Product Line}
 			\begin{itemize}
 				\item embedded or systems programming (e.g., Linux)
@@ -143,7 +143,8 @@ class Edge {
 			\end{itemize}
 		\end{definition}
 		\begin{note}{}
-			calculated by querying a \emph{satisfiability solver} whether $PC$ is not satisfiable (i.e., $\pnot SAT(PC)$)
+			calculated by querying a satisfiability solver whether $PC$ is \emph{not satisfiable}:\\
+			$\pnot SAT(PC)$
 		\end{note}
 		\uncover<3->{
 			\begin{note}{What causes dead code?}
@@ -229,7 +230,9 @@ class Edge {
 			\end{itemize}
 		\end{definition}
 		\begin{note}{}
-			calculated by querying a \emph{satisfiability solver} whether $PC' \pand \pnot PC$ is not satisfiable (i.e., $\pnot SAT(PC' \pand \pnot PC)$)
+			calculated by querying a satisfiability solver whether $PC' \pand \pnot PC$ is \emph{not satisfiable}:\\
+			$\phantom{\equiv{}} \pnot SAT(\pnot(PC' \mimplies PC))$\\
+			$\equiv{} \pnot SAT(PC' \pand \pnot PC)$
 		\end{note}
 		\uncover<2->{
 			\begin{example}{}
@@ -352,10 +355,10 @@ class Edge {
 	\end{fancycolumns}
 \end{frame}
 
-\begin{frame}[b,fragile]{\myframetitle}
+\begin{frame}[t,fragile]{\myframetitle}
 	\begin{fancycolumns}[t,columns=4,widths={31,20,20,29},animation=none]
+		\uncover<5->{%
 		\emph{Problem Space}
-		\uncover<5->{
 		\begin{exampletight}{}
 			\centering
 			\featureDiagram{G,concrete[N,concrete,mandatory[C,concrete,optional]][E,concrete,mandatory[D,concrete,optional][U,concrete,optional][H,concrete,optional]]}
@@ -379,8 +382,8 @@ class Edge {
 		\end{exampletight}
 		}
 	\nextcolumn
-		\emph{Solution Space $\rightarrow$}
-		\uncover<4->{
+		\uncover<4->{%
+			\emph{Solution Space $\rightarrow$}
 			\begin{exampletight}{File PC \tiny\texttt{node.cpp}}
 				\Huge\centering\rotatebox{45}{$Node$}
 				\vspace*{0.2ex}
@@ -456,8 +459,9 @@ class Edge {
 	\end{fancycolumns}
 \end{frame}
 
-\begin{frame}[fragile]{\myframetitle}
+\begin{frame}[t,fragile]{\myframetitle}
 	\begin{fancycolumns}[t,columns=4,widths={31,20,20,29},animation=none]
+		\emph{Problem Space}
 		\begin{exampletight}{Feature-Model Formula}
 			\vspace*{-3ex}
 			\color{lecturered}
@@ -469,6 +473,7 @@ class Edge {
 			\end{align*}
 		\end{exampletight}
 	\nextcolumn
+		\emph{Solution Space $\rightarrow$}
 		\begin{exampletight}{File PC \tiny\texttt{edge.cpp}}
 			\vspace*{4.5ex}
 			\Huge\centering\rotatebox{45}{\color{lecturered}$Edge$}
@@ -515,19 +520,21 @@ class Edge {
 		\end{cpptight}
 	\end{fancycolumns}
 	\begin{alignat*}{3}
-		PC_{location} \defeq~&\uncover<2->{\Phi(FM) &~\pand~& PC_{\texttt{edge.cpp}} &~\pand~& PC_{\texttt{pair<Node, Node> nodePair;}}\\}
-		\uncover<3->{=~&G \pand N \pand E \pand \pnot (D \pand U) \pand (H \pimplies U) \pand (D \por H) &~\pand~& E &~\pand~& \pnot D \pand \pnot H \pand \pnot D\\}
-		\uncover<4->{\mequals~&G \pand N \pand E \pand \pnot (D \pand U) \pand (H \pimplies U) \pand {\color{lecturered}(D \por H)} &~\pand~& E &~\pand~& {\color{lecturered}\pnot D \pand \pnot H} \pand \pnot D\\}
-		\uncover<5->{\mimplies~&(D \por H) \pand \pnot D \pand \pnot H\\}
-		\uncover<6->{\mimplies~&\bot \text{ -- so this code is dead after all!}}
+	PC_{location} \defeq &~\Phi(FM) \hskip5.5em \pand PC_{\texttt{edge.cpp}} \hskip5em \pand PC_{\texttt{pair<Node, Node> nodePair;}}\hskip9em
+	\\[1.5ex]
+	\uncover<2->{= &~G \pand N \pand E \pand \pnot (D \pand U) \pand (H \pimplies U) \pand (D \por H) \hskip3em \pand E \hskip3em \pand \pnot D \pand \pnot H \pand \pnot D}
+	\\[1.5ex]
+	\uncover<3->{\mimplies &~(D \por H) \pand \pnot D \pand \pnot H}
+	\\
+	\uncover<4->{\mimplies &~\bot \hskip2em {\color{lecturered}\rightarrow\text{code is dead!}}}
 	\end{alignat*}
 \end{frame}
 
 \subsection{Analyzing Feature Modules}
 
-\begin{frame}[b]{\myframetitle}
+\begin{frame}[t]{\myframetitle}
 	\vspace*{-3ex}
-	\begin{fancycolumns}[widths={34,66},animation=none]
+	\begin{fancycolumns}[t,widths={34,66},animation=none]
 		\begin{exampletight}{}
 			\featureDiagram{Store,abstract[Type,abstract,mandatory[SingleStore,concrete,alternative][MultiStore,concrete]][AccessControl,concrete,optional]}
 		\end{exampletight}
@@ -547,10 +554,10 @@ class Edge {
 				\end{fancycolumns}
 			\end{example}
 		}
-	\nextcolumn
+	\nextcolumn{}
 		\uncover<3->{\picDark[width=\linewidth]{fop-csur-example}}
 	\end{fancycolumns}
-	\uncover<3->{
+	\uncover<4->{
 		\vspace*{-3ex}
 		\begin{note}{}
 			Is there dead code? Are there superfluous annotations?
@@ -558,16 +565,16 @@ class Edge {
 	}
 \end{frame}
 
-\begin{frame}[b]{\myframetitle}
+\begin{frame}[t]{\myframetitle}
 	\vspace*{-3ex}
-	\begin{fancycolumns}[widths={34,66},animation=none]
+	\begin{fancycolumns}[t,widths={34,66},animation=none]
 		\begin{exampletight}{}
 			\featureDiagram{Store,abstract[Type,abstract,mandatory[SingleStore,concrete,alternative][MultiStore,concrete]][AccessControl,concrete,optional]}
 		\end{exampletight}
 		\begin{notetight}{Recap: 1:1 Feature Mapping!}
 			\picDark[width=\linewidth,clip,trim=0 120 250 0]{feature_komposition1}
 		\end{notetight}
-	\nextcolumn
+	\nextcolumn{}
 		\picDark[width=\linewidth]{fop-csur-example}
 	\end{fancycolumns}
 	\uncover<2->{

@@ -107,11 +107,26 @@
 
 \subsection{Example: Arithmetic Expressions}
 
-\begin{frame}{\myframetitle}
-	\begin{fancycolumns}[widths={60}]
-		\begin{exampletight}{$(5 + ln(50)) * 1.73$}
+\begin{frame}[fragile]{\myframetitle}
+	\begin{fancycolumns}[widths={50}]
+		\begin{exampletight}{Tree structure of $(5 + ln(50)) * 1.73$}
 			\centering
-			\picDark[width=.45\linewidth]{expressions}
+			  \begin{tikzpicture}
+				\node (1) {$*$};
+				\node (2) [below left = 1cm and 1.2cm of 1]  {$+$};
+				\node (3) [below right = 1cm and 1.2cm of 1] {$1.73$};
+				\node (4) [below left = 1cm and 1.2cm of 2] {$5$};
+				\node (5) [below right = 1cm and 1.2cm of 2] {$ln$};
+				\node (6) [below = 1cm of 5] {$50$};
+				
+				\path[draw,thick]
+				(1) edge node {} (2)
+				(1) edge node {} (3)
+				(2) edge node {} (4)
+				(2) edge node {} (5)
+				(5) edge node {} (6);
+			\end{tikzpicture}
+%			\picDark[width=.45\linewidth]{expressions}
 		\end{exampletight}
 	\nextcolumn
 		\begin{example}{}
