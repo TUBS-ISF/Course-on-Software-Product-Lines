@@ -35,12 +35,16 @@ Further contributors and former project members:
 
 ## Usage in Lectures
 
-- TU Braunschweig, Germany: Software Product Lines (Winter Term 2024/25, 2025/26)
-- Paderborn University, Germany: Software Product Lines (Summer Term 2024)
-- University of Bern, Switzerland: Software Product Lines (Winter Term 2022/23, 2023/24, 2024/25)
-- University of Magdeburg, Germany: Implementation Techniques for Software Product Lines (Winter Term 2022/23, 2023/24, 2024/25, 2025/26)
-- Harz University of Applies Sciences, Wernigerode, Germany: Requirements Engineering II - Software Product Lines (Summer Term 2023)
-- University of Ulm, Germany: Software Product Lines (Summer Term 2023)
+- TU Braunschweig, Germany (Winter Term 2024/25, 2025/26, Summer Term 2025)
+- Paderborn University, Germany (Summer Term 2024)
+- University of Bern, Switzerland (Autumn Semester 2022, 2023, 2024, 2025)
+- University of Magdeburg, Germany (Winter Term 2022/23, 2023/24, 2024/25, 2025/26)
+- Harz University of Applies Sciences, Wernigerode, Germany (Summer Term 2023)
+- University of Ulm, Germany (Summer Term 2023)
+
+Active forks:
+
+- [Reliable Software Engineering (RSE) Lab](https://github.com/rse-group/Course-on-Software-Product-Lines), Faculty of Computer Science, University Indonesia
 
 ## Getting Started
 
